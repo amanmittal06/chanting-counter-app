@@ -1,34 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [count, setCount] = useState(0);
+  const [totalRounds, setTotalRounds] = useState(0);
+  
+  function increseCount(){
+    setCount(count+1);
+  }
+
+  useEffect(() => {
+    const savedCount = localStorage.getItem('count');
+    const savedTotalRounds = localStorage.getItem('totalRounds');
+    if (savedCount) {
+      setCount(Number(savedCount));
+    }
+    if (savedTotalRounds) {
+      setTotalRounds(Number(savedTotalRounds));
+    }
+  }, []);
+
+
+  useEffect(()=>{
+    localStorage.setItem('count', count);
+    if(count===108){
+      setCount(0);
+      setTotalRounds(totalRounds+1);
+    }
+  }, [count])
+
+  
+  useEffect(()=>{
+    localStorage.setItem('totalRounds', totalRounds);
+  }, [totalRounds])
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    
+
+    <center className='container'>
+      <center className='box'>
+         <div className='count'>
+          <button disabled className='countButton'>-</button>
+          <div>{count}</div>
+          <button className='countButton' onClick={()=>increseCount()}>+</button>
+         </div>
+         <div>Total rounds: {totalRounds}</div>
+         <button className='resetButton'>Reset</button>
+      </center>
+    </center>
   )
 }
 
